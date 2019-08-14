@@ -54,7 +54,7 @@ usersRouter
             const token = jwt.sign({
               email : users[0].email,
               userId : users[0].id
-            }, process.env.JWT_KEY, 
+            }, 'secretpassword', 
             {
               expiresIn: '1h'
             });

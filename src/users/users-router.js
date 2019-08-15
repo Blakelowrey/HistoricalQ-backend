@@ -126,10 +126,20 @@ usersRouter
           const knexInstance = req.app.get('db');
           UsersService.addUser(knexInstance , user).then(()=>{
             
-            console.log(user);
-            return res.status(200).json({
-              message : 'user created',
+            
+            
+            const token = jwt.sign({
+              email : email,
+              userId : user.id
+            }, 'secretpassword', 
+            {
+              expiresIn: '1h'
             });
+            return res.status(200).json({
+              message: 'user created',
+              token
+            });
+           
           });
         }
         else{

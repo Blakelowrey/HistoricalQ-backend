@@ -124,13 +124,13 @@ usersRouter
           };
           console.log(user);
           const knexInstance = req.app.get('db');
-          UsersService.addUser(knexInstance , user).then(()=>{
+          UsersService.addUser(knexInstance , user).then(users=>{
             
-            
+            console.log(user[0]);
             
             const token = jwt.sign({
-              email : email,
-              userId : user.id
+              email : users[0].email,
+              userId : users[0].id
             }, 'secretpassword', 
             {
               expiresIn: '1h'

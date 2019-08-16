@@ -5,7 +5,17 @@ const usersRouter = express.Router();
 const jwt = require('jsonwebtoken');
 const checkAuth = require('../check-auth.js');
 
-
+usersRouter
+  .route('/favorites/arr')
+  .get(checkAuth,(req,res)=>{
+    const knexInstance = req.app.get('db'); 
+    UsersService.getFavoritesArr(knexInstance, req.userData.userId).then(entry_refs => {
+      if (entry_refs.length > 0){
+        return res.status(200).json(entry_refs);
+      }
+      return res.status(201).json({message : 'no favorites'});
+    }).catch(()=>res.status(404).json({message : 'error favorites'}));
+  });
 usersRouter
   .route('/favorites')
   .post(checkAuth,(req, res)=>{
@@ -33,9 +43,15 @@ usersRouter
   .get(checkAuth, (req, res)=>{
     const knexInstance = req.app.get('db');
     UsersService.getFavorites(knexInstance, req.userData.userId)
-      .then(entries => res.status(200).json(entries)).catch(()=>res.status(404).json({message : 'error getting fav'}));
+      .then(entries => res.status(200).json(entries))
+      .catch(()=>res.status(404).json({message : 'error getting fav'}));
+  })
+  .delete(checkAuth, (req , res)=>{
+    const {entry_ref} = req.body;
+    const knexInstance = req.app.get('db');
+    UsersService.deleteFavorite(knexInstance, req.userData.userId, entry_ref).then(()=>req.status(200).json({message: 'deleted favorite'}))
+      .catch(()=>res.json({message : 'failed favorite delete'}));
   });
-
 usersRouter
   .route('/login')
   .post((req,res)=>{

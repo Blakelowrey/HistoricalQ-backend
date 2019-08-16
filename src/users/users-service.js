@@ -9,7 +9,7 @@ const UsersService = {
     return db('users').insert(user).returning('*');
   },
   deleteUser(db, id){
-    db('favorites').where('user_ref', id).delete(); 
+    () => db('favorites').where('user_ref', id).delete(); 
     return db('users').where('id', id).delete();
   },
   deleteFavorite(db, user_ref, entry_ref){

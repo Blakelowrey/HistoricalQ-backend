@@ -13,7 +13,7 @@ const UsersService = {
     return db('users').where('id', id).delete();
   },
   deleteFavorite(db, user_ref, entry_ref){
-    db('favorites').where({'entry_ref': entry_ref, 'user_ref' : user_ref}).delete();
+    return db('favorites').where({'entry_ref': entry_ref, 'user_ref' : user_ref}).delete();
   },
   addFavorite(db, favorite){
     return db('favorites').insert(favorite).returning('*');

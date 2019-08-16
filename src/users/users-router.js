@@ -50,7 +50,10 @@ usersRouter
     const {entry_ref} = req.body;
     const knexInstance = req.app.get('db');
     UsersService.deleteFavorite(knexInstance, req.userData.userId, entry_ref).then(()=>req.status(200).json({message: 'deleted favorite'}))
-      .catch(()=>res.json({message : 'failed favorite delete'}));
+      .catch(err=>{
+        console.log(err);
+        return res.json({message : 'failed favorite delete'});
+      });
   });
 usersRouter
   .route('/login')

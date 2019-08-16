@@ -49,7 +49,7 @@ usersRouter
   .delete(checkAuth, (req , res)=>{
     const {entry_ref} = req.body;
     const knexInstance = req.app.get('db');
-    UsersService.deleteFavorite(knexInstance, req.userData.userId, entry_ref).then(()=>req.status(200).json({message: 'deleted favorite'}))
+    UsersService.deleteFavorite(knexInstance, req.userData.userId, entry_ref).then(()=>res.status(200).json({message: 'deleted favorite'}))
       .catch(err=>{
         console.log(err);
         return res.json({message : 'failed favorite delete'});
@@ -117,7 +117,10 @@ usersRouter
       return res.status(200).json({
         message: 'user delete success'
       });
-    }).catch(()=>res.status(400).json({message : 'error user delete'}));
+    }).catch((err)=>{
+      console.error(err);
+      return res.status(500).json({message : 'error user delete'});
+    });
   });
 
 

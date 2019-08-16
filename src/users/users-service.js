@@ -9,11 +9,11 @@ const UsersService = {
     return db('users').insert(user).returning('*');
   },
   deleteUser(db, id){
-    () => db('favorites').where('user_ref', id).delete(); 
+    db('favorites').where('user_ref', id).delete(); 
     return db('users').where('id', id).delete();
   },
   deleteFavorite(db, user_ref, entry_ref){
-    return db('favorites').where({'entry_ref': entry_ref, 'user_ref' : user_ref}).delete();
+    return db('favorites').where({'entry_ref': entry_ref, 'user_ref' : user_ref}).delete().returning('*');
   },
   addFavorite(db, favorite){
     return db('favorites').insert(favorite).returning('*');

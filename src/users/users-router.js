@@ -159,13 +159,13 @@ usersRouter
               token
             });
            
-          });
+          }).catch(()=>res.status(401).json({message : 'error registering'}));
         }
         else{
           return res.status(404).json({message : 'missing username, password, or email'});
         }
       }
-    }).catch(()=>res.status(401).json({message : 'error registering'}));
+    });
     
   });
 

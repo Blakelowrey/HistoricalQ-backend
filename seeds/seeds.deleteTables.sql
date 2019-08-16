@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS favorites; 
+DROP TABLE IF EXISTS entries;
+DROP TABLE IF EXISTS users; 

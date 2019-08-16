@@ -12,7 +12,7 @@ entriesRouter
     EntriesService.getAllEntries(knexInstance).then(entries=>{
       console.log(entries);
       return res.status(200).json(entries);
-    });
+    }).catch(()=>res.status(404).json({message: 'failed get all'}));
   });
 
 
@@ -81,7 +81,7 @@ entriesRouter
       }
       return res.status(200).json(newEntries);
 
-    });
+    }).catch(()=>res.status(404).json({message: 'error getting sort'}));
     
   });
 
@@ -120,7 +120,7 @@ entriesRouter
       console.log(randomEntries);
       return res.status(200).json(randomEntries);
     
-    });
+    }).catch(()=>res.status(404).json({message: ' error getting random'}));
   });
 
 module.exports = entriesRouter;

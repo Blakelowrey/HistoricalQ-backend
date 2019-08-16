@@ -26,14 +26,14 @@ usersRouter
         return res.status(200).json({
           message: 'added favorite'
         });
-      });
+      }).catch(()=>res.status(400).json({message: 'error'}));
 
 
   })
   .get(checkAuth, (req, res)=>{
     const knexInstance = req.app.get('db');
     UsersService.getFavorites(knexInstance, req.userData.userId)
-      .then(entries => res.status(200).json(entries));
+      .then(entries => res.status(200).json(entries)).catch(()=>res.status(404).json({message : 'error getting fav'}));
   });
 
 usersRouter
@@ -90,15 +90,15 @@ usersRouter
         date_created,
         about
       });
-    });
+    }).catch(()=>res.status(400).json({message: 'error getting login'}));
   })
   .delete(checkAuth , (req,res)=>{
     const knexInstance = req.app.get('db');
     UsersService.deleteUser(knexInstance, req.userData.userId).then(()=>{
       return res.status(200).json({
-        message: 'delete success'
+        message: 'user delete success'
       });
-    });
+    }).catch(()=>res.status(400).json({message : 'error user delete'}));
   });
 
 
@@ -146,7 +146,7 @@ usersRouter
           return res.status(404).json({message : 'missing username, password, or email'});
         }
       }
-    });
+    }).catch(()=>res.status(401).json({message : 'error registering'}));
     
   });
 

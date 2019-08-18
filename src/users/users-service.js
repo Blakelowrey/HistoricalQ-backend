@@ -9,7 +9,6 @@ const UsersService = {
     return db('users').insert(user).returning('*');
   },
   deleteUser(db, id){
-    this.deleteFavorites(db , id);
     return db('users').where('id', id).delete();
   },
   deleteFavorites(db, user_ref){

@@ -113,14 +113,15 @@ usersRouter
   })
   .delete(checkAuth , (req,res)=>{
     const knexInstance = req.app.get('db');
-    UsersService.deleteUser(knexInstance, req.userData.userId).then(()=>{
-      return res.status(200).json({
-        message: 'user delete success'
+    UsersService.deleteFavorites(knexInstance, req.userData.userId).then(()=>{
+      UsersService.deleteUser(knexInstance , req.userData.userId);
+    }).then(()=> 
+      res.status(200).json({
+        message: 'user delete success'}))
+      .catch((err)=>{
+        console.error(err);
+        return res.status(500).json({message : 'error user delete'});
       });
-    }).catch((err)=>{
-      console.error(err);
-      return res.status(500).json({message : 'error user delete'});
-    });
   });
 
 

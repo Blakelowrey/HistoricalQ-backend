@@ -124,7 +124,25 @@ usersRouter
   });
 
 
+usersRouter
+  .route('/login/refresh')
+  .get(checkAuth, (req, res)=>{
+    const knexInstance = req.app.get('db');
+    UsersService.getUserById(knexInstance, req.userData.userId).then(users =>{
+      const token = jwt.sign({
+        email : users[0].email,
+        userId : users[0].id
+      }, 'secretpassword', 
+      {
+        expiresIn: '1h'
+      });
+      res.status(200).json({message : 'refreshed credentials', token});
+    }).catch(err => {
+      console.log(err);
+      res.status(500).json({message : 'auth refresh failed'});
+    });
 
+  });
 
 usersRouter
   .route('/create')

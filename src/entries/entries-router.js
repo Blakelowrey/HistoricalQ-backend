@@ -37,7 +37,15 @@ entriesRouter
         }
         if (sortBy === 'YOB'){
           newEntries.sort((a,b) =>{
-            return a.yob-b.yob;
+            let aYear = a.yob;
+            let bYear = b.yob;
+            if(a.eob === 'BC'){
+              aYear = aYear * -1;
+            }
+            if(b.eob === 'BC'){
+              bYear = bYear * -1;
+            }
+            return aYear - bYear;
           });
           console.log(newEntries);
         }
@@ -46,7 +54,7 @@ entriesRouter
         console.log('era working');
         if(era === 'antiquity'){
           newEntries = newEntries.filter(entry => {
-            if(entry.yob === 'BC'){
+            if(entry.eob === 'BC'){
               return true;
             }
             else if (entry.eob === 'AD'){

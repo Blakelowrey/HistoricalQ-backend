@@ -111,7 +111,10 @@ entriesRouter
     console.log('random running');
     const knexInstance = req.app.get('db');
     EntriesService.getAllEntries(knexInstance).then(entries=>{
-      console.log(entries);
+      let newEntries = entries.filter(entry => {
+        return (entry.post_status === 'active');
+      });
+      console.log(newEntries);
       let {amount} = req.query;
       amount = parseInt(amount);
       if(!amount)(
@@ -121,7 +124,7 @@ entriesRouter
       let indexArray = [];
       let i = 0;
       while( i < amount){
-        let randomIndex = Math.floor(Math.random() * entries.length);
+        let randomIndex = Math.floor(Math.random() * newEntries.length);
         let isSame = false;
         indexArray.forEach(index => {
           if(index === randomIndex){
@@ -135,7 +138,7 @@ entriesRouter
       }
       console.log(indexArray);
       indexArray.forEach(index => {
-        randomEntries.push(entries[index]);
+        randomEntries.push(newEntries[index]);
       });
       console.log(randomEntries);
       return res.status(200).json(randomEntries);

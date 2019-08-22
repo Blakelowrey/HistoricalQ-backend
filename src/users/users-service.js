@@ -11,6 +11,9 @@ const UsersService = {
   deleteUser(db, id){
     return db('users').where('id', id).delete();
   },
+  getAllUsers(db){
+    return db('users').select('*');
+  },
   deleteFavorites(db, user_ref){
     return db('favorites').where('user_ref', user_ref).delete();
   },

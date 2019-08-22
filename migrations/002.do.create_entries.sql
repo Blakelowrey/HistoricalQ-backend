@@ -7,5 +7,7 @@ CREATE TABLE entries (
     POB text,
     YOD int,
     EOD text,
-    POD text
+    POD text,
+    post_status text,
+    user_ref INTEGER REFERENCES users(id)
 );

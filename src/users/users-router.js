@@ -149,6 +149,21 @@ usersRouter
   .route('/create')
   .post((req, res)=>{
     const {username, password, email, about = ''} = req.body;
+    const knexInstance = req.app.get('db');
+    UsersService.getAllUsers(knexInstance).then(users => {
+      users.forEach(user => {
+        if(username === user.username){
+          return res.status(200).json({message : 'username taken'});
+        }
+        if(email === user.email){
+          return res.status(200).json({message : 'email taken'});
+        }
+      });
+    }).catch(err => {
+      console.log(err);
+      res.status(503).json({message : 'error in create user'});
+    });
+
     bcrypt.hash(password , 10 , (err, hash) => {
       
       if(err){

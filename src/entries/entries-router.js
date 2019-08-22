@@ -2,7 +2,7 @@ const express = require('express');
 const EntriesService = require('./entries-service.js');
 
 const entriesRouter = express.Router();
-const parse = express.json();
+const checkAuth = require('../check-auth.js');
 
 
 entriesRouter
@@ -11,8 +11,17 @@ entriesRouter
     const knexInstance = req.app.get('db');
     EntriesService.getAllEntries(knexInstance).then(entries=>{
       console.log(entries);
-      return res.status(200).json(entries);
+      let newEntries = entries.filter(entry => {
+        return (entry.post_status === 'active');
+      });
+      return res.status(200).json(newEntries);
     }).catch(()=>res.status(404).json({message: 'failed get all'}));
+  })
+  .post(checkAuth, (req,res)=>{
+    const {name, description, yob, eob, pob, yod, eod, pod} = req.body;
+    if (!(name || description || yob || eob || pob || yod || eod || pod)){
+      return res.status(501).json({message : 'missing info in submission'});
+    }
   });
 
 
@@ -87,6 +96,9 @@ entriesRouter
         }
 
       }
+      newEntries = entries.filter(entry => {
+        return (entry.post_status === 'active');
+      });
       return res.status(200).json(newEntries);
 
     }).catch(()=>res.status(404).json({message: 'error getting sort'}));

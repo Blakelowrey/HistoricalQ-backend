@@ -34,7 +34,7 @@ entriesRouter
       yod,
       eod,
       pod,
-      status : 'pending',
+      post_status : 'pending',
       user_ref : req.userData.userId
     };
     const knexInstance = req.app.get('db');

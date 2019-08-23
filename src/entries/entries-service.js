@@ -4,6 +4,9 @@ const EntriesService = {
     console.log(entries);
     return entries;
   },
+  getAllUserEntries(db, user_ref){
+    return db('entries').select('*').where('user_ref', user_ref);
+  },
   getEntryById(db, id){
     return db('entries').select('*').where('id', id);
   },

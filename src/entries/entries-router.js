@@ -19,12 +19,44 @@ entriesRouter
   })
   .post(checkAuth, (req,res)=>{
     const {name, description, yob, eob, pob, yod, eod, pod} = req.body;
-    if (!(name || description || yob || eob || pob || yod || eod || pod)){
+    if (!(name && description && yob && eob && pob && yod && eod && pod)){
       return res.status(501).json({message : 'missing info in submission'});
     }
+    if (!((eob === 'BC' || eob === 'AD') && (eod === 'BC' || eod === 'AD'))){
+      return res.status(501).json({message : 'invalid eras'});
+    }
+    const entry = {
+      name,
+      description,
+      yob,
+      eob,
+      pob,
+      yod,
+      eod,
+      pod,
+      status : 'pending',
+      user_ref : req.userData.userId
+    };
+    const knexInstance = req.app.get('db');
+    EntriesService.addEntry(knexInstance, entry).then(()=>{
+      res.status(200).json({message : 'added entry'});
+    }).catch(err => {
+      console.log(err);
+      res.status(500).json({message : 'error adding entry'});
+    });
   });
 
-
+entriesRouter
+  .route('/account')
+  .get(checkAuth, (req,res)=>{
+    const knexInstance = req.app.get('db');
+    EntriesService.getAllUserEntries(knexInstance, req.userData.userId).then(entries => {
+      return res.status(200).json(entries);
+    }).catch(err => {
+      console.log(err);
+      return req.status(500).json({message : 'error getting user submissions'});
+    });
+  });
 
 entriesRouter
   .route('/sort/')

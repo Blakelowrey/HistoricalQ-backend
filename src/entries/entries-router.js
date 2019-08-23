@@ -59,6 +59,28 @@ entriesRouter
   });
 
 entriesRouter
+  .route('/update')
+  .post(checkAuth, (req,res)=>{
+    const {entry_id, post_status} = req.body;
+    if(!(post_status === 'pending' || post_status === 'active' || post_status === 'revise')){
+      return res.status(400).json({message : 'invalid post status string'});
+    }
+    const updated = {post_status};
+    if(req.userData.userId === 1){
+      const knexInstance = req.app.get('db');
+      EntriesService.updateEntry(knexInstance, entry_id, updated).then(() => {
+        return res.status(200).json({message : 'updated status'});
+      }).catch(err => {
+        console.log(err);
+        return req.status(500).json({message : 'error updating user submission'});
+      });
+    }
+    else {
+      return req.status(500).json({message : 'only admin can update status'});
+    }
+  });
+
+entriesRouter
   .route('/sort/')
   .get((req,res) => {
     const knexInstance = req.app.get('db');
